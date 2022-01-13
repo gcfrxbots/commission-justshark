@@ -3,6 +3,7 @@ from Initialize import *
 initSetup()
 from CustomCommands import *
 from Authenticate import *
+from Spreadsheet import *
 
 
 
@@ -125,7 +126,9 @@ class chat:
         while True:
             result = self.ws.recv()
             resultDict = json.loads(result)
-            print(resultDict)
+            #print(resultDict)
+            if debugMode:
+                print(resultDict)
             if "event" in resultDict.keys() and not self.active:
                 if "is_live" in resultDict["event"]:
                     print(">> Connection to chat successful!")
@@ -174,6 +177,11 @@ class chat:
                         for cmdFromFile in commandsFromFile:
                             if command.lower() == cmdFromFile.lower():
                                 chatConnection.sendToChat(commandsFromFile[cmdFromFile])
+
+                        # EMOTES
+                        for emote in spreadsheet.emotes:
+                            if emote in message.split():
+                                spreadsheet.processIncomingMessage(message, user, emote)
 
                         if command[0] == "!":  # Only run normal commands if COMMAND PHRASE is blank
                             runcommand(command, cmdarguments, user, False)
