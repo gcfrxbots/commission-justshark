@@ -94,15 +94,20 @@ class spreadsheetConfig:
         if not "%s_CD" % triggerEmote in misc.timers.keys():  # Check if emote is on cooldown
             # Actions if this emote is already active
             if triggerEmote in self.activeEmotes.keys():
+                if user in self.activeEmotes[triggerEmote]['contributors']:
+                    return
                 count = self.activeEmotes[triggerEmote]['count'] + 1
+                contributors = self.activeEmotes[triggerEmote]['contributors'].append(user)
             else:  # Actions if this is creating a new entry (And setting timers)
                 count = 1
                 misc.setTimer(triggerEmote, timeLimit)
+                contributors = [user]
 
             self.activeEmotes[triggerEmote] = {
                 "amtRequired": amtRequired,
                 "count": count,
-                "hotkey": hotkey
+                "hotkey": hotkey,
+                "contributors": contributors
             }
 
             if self.activeEmotes[triggerEmote]["count"] >= amtRequired:
