@@ -6,28 +6,6 @@ from Authenticate import *
 from Spreadsheet import *
 
 
-
-
-
-class runMiscControls:
-
-    def __init__(self):
-        pass
-
-    def getUser(self, line):
-        seperate = line.split(":", 2)
-        user = seperate[1].split("!", 1)[0]
-        return user
-
-    def getMessage(self, line):
-        seperate = line.split(":", 2)
-        message = seperate[2]
-        return message
-
-    def formatTime(self):
-        return datetime.datetime.today().now().strftime("%I:%M")
-
-
 def runcommand(command, cmdArguments, user, mute):
     commands = {**commands_CustomCommands}
     cmd = None
@@ -185,7 +163,7 @@ class chat:
 
                         if command[0] == "!":  # Only run normal commands if COMMAND PHRASE is blank
                             runcommand(command, cmdarguments, user, False)
-                    except:
+                    except PermissionError:
                         pass
 
             if "disclaimer" in resultDict.keys():  # Should just be keepalives?
@@ -224,12 +202,29 @@ def console():  # Thread to handle console input
                 os._exit(1)
 
 
-if __name__ == "__main__":
-    misc = runMiscControls()
+def tick():
+    prevTime = datetime.datetime.now()
+    while True:
+        time.sleep(0.4)
 
+        if misc.timerActive:
+            for timer in misc.timers:
+                if datetime.datetime.now() > misc.timers[timer]:
+                    spreadsheet.timerDone(timer)  # Also triggers misc.timerdone()
+                    break
+
+        # Timers that send stuff every X seconds
+
+        # if datetime.datetime.now() > prevTime + datetime.timedelta(minutes=settings["TIMER DELAY"]):
+        #     chatConnection.sendToChat(resources.askChatAQuestion())
+        #     prevTime = datetime.datetime.now()
+
+
+if __name__ == "__main__":
     t1 = Thread(target=chatConnection.main)
     t2 = Thread(target=console)
+    t3 = Thread(target=tick)
 
     t1.start()
     t2.start()
-
+    t3.start()

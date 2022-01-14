@@ -1,6 +1,7 @@
 import os
 import time
 import random
+from Initialize import misc
 
 try:
     import xlrd
@@ -24,6 +25,7 @@ class spreadsheetConfig:
     def __init__(self):
         self.emotes = {}
         self.readSpreadsheet()
+        self.activeEmotes = {}
 
     def formatXlsx(self):
         print("Formatting world xlsx")
@@ -66,15 +68,71 @@ class spreadsheetConfig:
 
                 self.emotes[emoteName] = emoteDict
 
+    def timerDone(self, timer):
+        misc.timerDone(timer)
+        if timer in self.activeEmotes.keys():
+            self.activeEmotes.pop(timer)
+
+
+    def success(self, emote):
+        hotkey = self.emotes[emote]["hotkey"]
+        cooldown = self.emotes[emote]["cooldown"]
+        self.timerDone(emote)
+
+        script.writeToFile(hotkey)
+        script.runAHK("PRESS.exe")
+
+        misc.setTimer("%s_CD" % emote, cooldown)
+
+
+
     def processIncomingMessage(self, message, user, triggerEmote):
-        print(triggerEmote + " Detected!")
-        print(self.emotes[triggerEmote])
         amtRequired = self.emotes[triggerEmote]["amtRequired"]
         timeLimit = self.emotes[triggerEmote]["timeLimit"]
-        cooldown = self.emotes[triggerEmote]["cooldown"]
         hotkey = self.emotes[triggerEmote]["hotkey"]
 
+        if not "%s_CD" % triggerEmote in misc.timers.keys():  # Check if emote is on cooldown
+            # Actions if this emote is already active
+            if triggerEmote in self.activeEmotes.keys():
+                count = self.activeEmotes[triggerEmote]['count'] + 1
+            else:  # Actions if this is creating a new entry (And setting timers)
+                count = 1
+                misc.setTimer(triggerEmote, timeLimit)
+
+            self.activeEmotes[triggerEmote] = {
+                "amtRequired": amtRequired,
+                "count": count,
+                "hotkey": hotkey
+            }
+
+            if self.activeEmotes[triggerEmote]["count"] >= amtRequired:
+                self.success(triggerEmote)
 
 
+
+class scriptTasking:
+    def __init__(self):
+        self.isScriptRunning = False
+        self.scriptQueue = []
+
+    def writeToFile(self, whatToWrite):
+        with open("output.txt", "w") as f:
+            f.write(whatToWrite)
+
+    def runAHK(self, path):
+        if self.isScriptRunning:  # Queue the next thing to be run
+            self.scriptQueue.append(path)
+            return
+
+        self.isScriptRunning = True
+        os.system(path)
+        self.isScriptRunning = False
+
+        if self.scriptQueue:
+            self.runAHK(self.scriptQueue[0])
+
+
+
+script = scriptTasking()
 spreadsheet = spreadsheetConfig()
 

@@ -16,10 +16,12 @@ FileRead, CommandVar, output.txt
 
 Input = %CommandVar%
 
+Send, %Input%
 
-SendInput, {%Input% down}
-Sleep, 70
-SendInput, {%Input% up}
-Sleep, 45
+
+;SendInput, {%Input% down}
+;Sleep, 70
+;SendInput, {%Input% up}
+;Sleep, 45
 
 	
