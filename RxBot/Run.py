@@ -4,6 +4,7 @@ initSetup()
 from CustomCommands import *
 from Authenticate import *
 from Spreadsheet import *
+from Youtube import *
 
 
 def runcommand(command, cmdArguments, user, mute):
@@ -186,20 +187,33 @@ class chat:
 chatConnection = chat()
 
 
-def console():  # Thread to handle console input
+def youtube():  # Thread to handle console input
+    oldUrl = ""
+    oldUrl2 = ""
+    targetTime = datetime.datetime.now()
     while True:
-        consoleIn = input("")
+        time.sleep(1)
+        curUrl = detectUrl()
 
-        command = ((consoleIn.split(' ', 1)[0]).lower()).replace("\r", "")
-        cmdArguments = consoleIn.replace(command or "\r" or "\n", "").strip()
-        # Run the commands function
-        if command:
-            if command[0] == "!":
-                runcommand(command, cmdArguments, "CONSOLE", True)
+        if curUrl:
+            if "youtube.com/watch" in curUrl:
+                if curUrl != oldUrl:
 
-            if command.lower() in ["quit", "exit", "leave", "stop", "close"]:
-                print("Shutting down")
-                os._exit(1)
+                    curTime = datetime.datetime.now()
+                    targetTime = curTime + datetime.timedelta(seconds=settings["DETECTION DELAY"])
+
+            oldUrl = curUrl
+
+        if datetime.datetime.now() > targetTime:  # Detect when timer is done
+            if curUrl == detectUrl() and curUrl != oldUrl2:
+                if "youtube.com/watch" in curUrl:
+                    chatConnection.sendToChat(settings["URL PREFIX"] + " " + curUrl)
+                    oldUrl2 = curUrl
+                    targetTime = datetime.datetime.now()  # Reset targettime
+
+
+
+
 
 
 def tick():
@@ -222,7 +236,7 @@ def tick():
 
 if __name__ == "__main__":
     t1 = Thread(target=chatConnection.main)
-    t2 = Thread(target=console)
+    t2 = Thread(target=youtube)
     t3 = Thread(target=tick)
 
     t1.start()

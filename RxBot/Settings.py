@@ -25,6 +25,9 @@ debugMode = (vars(parser.parse_args())["debugMode"])
 defaultSettings = [
     ("CHANNEL", "", "Your Twitch username, all lowercase."),
     ("BOT ACCOUNT", "", "Your bot's Twitch username, all lowercase."),
+    ("", "", ""),
+    ("DETECTION DELAY", "15", "How long you must be on a youtube page before the bot announces the URL to chat."),
+    ("URL PREFIX", "Watch the video I'm watching:", "Added before the URL when announcing youtube videos. Set to nothing to just post the URL."),
 ]
 
 
