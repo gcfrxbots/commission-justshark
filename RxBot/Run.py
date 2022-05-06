@@ -49,7 +49,7 @@ def runcommand(command, cmdArguments, user, mute):
 class chat:
     def __init__(self):
         self.ws = None
-        self.url = "wss://api.casterlabs.co/v2/koi?client_id=LmHG2ux992BxqQ7w9RJrfhkW"
+        self.url = "wss://api.casterlabs.co/v2/koi?client_id=jJu2vQGnHf5U5trv"
         self.puppet = False
         self.active = False
 
@@ -191,6 +191,7 @@ def youtube():  # Thread to handle console input
     oldUrl = ""
     oldUrl2 = ""
     targetTime = datetime.datetime.now()
+    curUrl = ""
     while True:
         time.sleep(1)
         curUrl = detectUrl()
@@ -205,13 +206,13 @@ def youtube():  # Thread to handle console input
 
             oldUrl = curUrl
 
-        if datetime.datetime.now() > targetTime:  # Detect when timer is done
-            if curUrl == detectUrl() and curUrl != oldUrl2:
-                if "youtube.com/watch" in curUrl:
-                    print("Success")
-                    chatConnection.sendToChat(settings["URL PREFIX"] + " " + curUrl)
-                    oldUrl2 = curUrl
-                    targetTime = datetime.datetime.now()  # Reset targettime
+            if datetime.datetime.now() > targetTime:  # Detect when timer is done
+                if curUrl == detectUrl() and curUrl != oldUrl2:
+                    if "youtube.com/watch" in curUrl:
+                        print("Success")
+                        chatConnection.sendToChat(settings["URL PREFIX"] + " " + curUrl)
+                        oldUrl2 = curUrl
+                        targetTime = datetime.datetime.now()  # Reset targettime
 
 
 
