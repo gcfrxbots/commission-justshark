@@ -194,11 +194,12 @@ def youtube():  # Thread to handle console input
     while True:
         time.sleep(1)
         curUrl = detectUrl()
+        #print(curUrl)
 
         if curUrl:
             if "youtube.com/watch" in curUrl:
                 if curUrl != oldUrl:
-
+                    print("Set timer")
                     curTime = datetime.datetime.now()
                     targetTime = curTime + datetime.timedelta(seconds=settings["DETECTION DELAY"])
 
@@ -207,6 +208,7 @@ def youtube():  # Thread to handle console input
         if datetime.datetime.now() > targetTime:  # Detect when timer is done
             if curUrl == detectUrl() and curUrl != oldUrl2:
                 if "youtube.com/watch" in curUrl:
+                    print("Success")
                     chatConnection.sendToChat(settings["URL PREFIX"] + " " + curUrl)
                     oldUrl2 = curUrl
                     targetTime = datetime.datetime.now()  # Reset targettime

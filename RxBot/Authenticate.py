@@ -16,7 +16,7 @@ def ran16characterstring():
 
 rndString = ran16characterstring()
 
-authLine = "auth_redirect%3A{rndstring}%3Acaffeinated_twitch%3Arxbots".format(rndstring=rndString)
+authLine = "auth_redirect%3A{rndstring}%3Acaffeinated_twitch%3AjJu2vQGnHf5U5trv".format(rndstring=rndString)
 
 url = "wss://api.casterlabs.co/v1/kinoko?type=parent&channel=" + authLine
 
