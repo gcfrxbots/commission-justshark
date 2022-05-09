@@ -28,6 +28,7 @@ defaultSettings = [
     ("", "", ""),
     ("DETECTION DELAY", "15", "How long you must be on a youtube page before the bot announces the URL to chat."),
     ("URL PREFIX", "Watch the video I'm watching:", "Added before the URL when announcing youtube videos. Set to nothing to just post the URL."),
+    ("HOTKEY REPRESS DELAY", "10", "The bot will automatically re-press the hotkey after this amount of time. Set to 0 to not re-press the hotkey."),
 ]
 
 

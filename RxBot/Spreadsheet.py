@@ -1,7 +1,7 @@
 import os
 import time
 import random
-from Initialize import misc
+from Initialize import misc, settings
 
 try:
     import xlrd
@@ -70,6 +70,10 @@ class spreadsheetConfig:
 
     def timerDone(self, timer):
         misc.timerDone(timer)
+        if "_DELAY" in timer:
+            script.writeToFile(self.emotes[timer.split("_")[0]]["hotkey"])
+            script.runAHK("PRESS.exe")  # Write and run the hotkey again once the timer is finished.
+
         if timer in self.activeEmotes.keys():
             self.activeEmotes.pop(timer)
 
@@ -81,6 +85,9 @@ class spreadsheetConfig:
 
         script.writeToFile(hotkey)
         script.runAHK("PRESS.exe")
+
+        if settings["HOTKEY REPRESS DELAY"]:
+            misc.setTimer("%s_DELAY" % emote, settings["HOTKEY REPRESS DELAY"])
 
         misc.setTimer("%s_CD" % emote, cooldown)
 
