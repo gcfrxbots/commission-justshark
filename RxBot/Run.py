@@ -97,6 +97,7 @@ class chat:
                     "message": message,
                     "chatter": "PUPPET"}
             self.sendRequest(request)
+            print("SENT: " + message)
 
 
     def main(self):
@@ -111,8 +112,8 @@ class chat:
             if "event" in resultDict.keys() and not self.active:
                 if "is_live" in resultDict["event"]:
                     print(">> Connection to chat successful!")
-                    channel = resultDict["event"]["streamer"]["username"]
-                    settings["CHANNEL"] = channel
+                    #channel = resultDict["event"]["streamer"]["username"]
+                    #settings["CHANNEL"] = channel
                     self.active = True
                     if self.puppet:
                         self.puppetlogin()
