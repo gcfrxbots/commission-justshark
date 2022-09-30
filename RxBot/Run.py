@@ -140,11 +140,11 @@ class chat:
                     except:
                         pass
 
-                if "donations" in eventKeys:
-                        bitsAmount = round(resultDict["event"]["donations"][0]["amount"])
-                        user = resultDict["event"]["sender"]["displayname"]
-                        message = resultDict["event"]["message"]
-                        print("(" + misc.formatTime() + ")>> " + user + " cheered %s bits with the message %s" % (bitsAmount, message))
+                # if "donations" in eventKeys:
+                #         bitsAmount = round(resultDict["event"]["donations"][0]["amount"])
+                #         user = resultDict["event"]["sender"]["displayname"]
+                #         message = resultDict["event"]["message"]
+                #         print("(" + misc.formatTime() + ")>> " + user + " cheered %s bits with the message %s" % (bitsAmount, message))
 
 
                 if "message" in eventKeys:  # Got chat message, display it then process commands

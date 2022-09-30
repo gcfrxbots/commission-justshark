@@ -1,6 +1,7 @@
 import os
 import time
 import random
+import pyautogui
 from Initialize import misc, settings
 
 try:
@@ -28,7 +29,7 @@ class spreadsheetConfig:
         self.activeEmotes = {}
 
     def formatXlsx(self):
-        print("Formatting world xlsx")
+        print("Formatting xlsx")
         try:
             with xlsxwriter.Workbook('../Config/Emotes.xlsx') as workbook:
                 worksheet = workbook.add_worksheet('Emote Config')
@@ -71,8 +72,11 @@ class spreadsheetConfig:
     def timerDone(self, timer):
         misc.timerDone(timer)
         if "_DELAY" in timer:
-            script.writeToFile(self.emotes[timer.split("_")[0]]["hotkey"])
-            script.runAHK("PRESS.exe")  # Write and run the hotkey again once the timer is finished.
+            hotkey = self.emotes[timer.split("_")[0]]["hotkey"]  # run the hotkey again once the timer is finished.
+
+            splitHotkeyData = hotkey.replace(" ", "").split(",")
+            print("Sending hotkey: " + str(splitHotkeyData))
+            pyautogui.hotkey(*splitHotkeyData)
 
         if timer in self.activeEmotes.keys():
             self.activeEmotes.pop(timer)
@@ -83,8 +87,9 @@ class spreadsheetConfig:
         cooldown = self.emotes[emote]["cooldown"]
         self.timerDone(emote)
 
-        script.writeToFile(hotkey)
-        script.runAHK("PRESS.exe")
+        splitHotkeyData = hotkey.replace(" ", "").split(",")
+        print("Sending hotkey: " + str(splitHotkeyData))
+        pyautogui.hotkey(*splitHotkeyData)
 
         if settings["HOTKEY REPRESS DELAY"]:
             misc.setTimer("%s_DELAY" % emote, settings["HOTKEY REPRESS DELAY"])

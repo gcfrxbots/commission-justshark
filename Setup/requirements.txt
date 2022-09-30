@@ -9,3 +9,5 @@ validators
 websocket-client
 
 pywinauto
+
+pyautogui
